@@ -1,0 +1,24 @@
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Node
+node_modules/
+dist/
+.env.local
+.env.*.local
+
+# Java
+target/
+*.class
+*.jar
+*.war
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Qoder
+.qoder/
