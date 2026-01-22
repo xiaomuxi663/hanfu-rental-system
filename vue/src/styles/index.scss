@@ -1,3 +1,43 @@
+/* 汉服租赁系统 - 中国古典风格样式 */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&display=swap');
+
+:root {
+  /* 主色调 - 传统中国色 */
+  --hanfu-red: #B22222;           /* 绛红 */
+  --hanfu-red-light: #D4574E;     /* 浅绛红 */
+  --hanfu-red-dark: #8B0000;      /* 暗红 */
+  --hanfu-gold: #C9A227;          /* 古金 */
+  --hanfu-gold-light: #E8D48B;    /* 浅金 */
+  --hanfu-ink: #2C2416;           /* 墨色 */
+  --hanfu-ink-light: #5C4A32;     /* 浅墨 */
+  --hanfu-paper: #FAF6ED;         /* 宣纸白 */
+  --hanfu-paper-dark: #F0E9DB;    /* 深宣纸 */
+  --hanfu-pine: #2D5A4A;          /* 松柏绿 */
+  --hanfu-cloud: #E8E4DC;         /* 云白 */
+  
+  /* 功能色 */
+  --color-success: #4A7C59;
+  --color-warning: #C9A227;
+  --color-danger: #B22222;
+  --color-info: #5C4A32;
+  
+  /* 文字色 */
+  --text-primary: #2C2416;
+  --text-secondary: #5C4A32;
+  --text-placeholder: #9E8E73;
+  
+  /* 边框和阴影 */
+  --border-color: #D4C8B5;
+  --shadow-light: 0 2px 12px rgba(44, 36, 22, 0.08);
+  --shadow-medium: 0 4px 20px rgba(44, 36, 22, 0.12);
+  --shadow-heavy: 0 8px 30px rgba(44, 36, 22, 0.18);
+  
+  /* 圆角 */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -7,7 +47,10 @@
 html, body {
   width: 100%;
   height: 100%;
-  font-family: 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: 'Noto Serif SC', 'STSong', 'SimSun', serif;
+  background-color: var(--hanfu-paper);
+  color: var(--text-primary);
+  line-height: 1.6;
 }
 
 a {
@@ -15,17 +58,116 @@ a {
   color: inherit;
 }
 
-// 自定义滚动条
+/* 自定义滚动条 */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #dcdfe6;
-  border-radius: 3px;
+  background: var(--hanfu-gold);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f5f7fa;
+  background: var(--hanfu-cloud);
+}
+
+/* 古典按钮样式 */
+.btn-hanfu {
+  background: linear-gradient(135deg, var(--hanfu-red) 0%, var(--hanfu-red-dark) 100%);
+  color: var(--hanfu-paper);
+  border: none;
+  padding: 12px 32px;
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 500;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-hanfu::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.btn-hanfu:hover::before {
+  left: 100%;
+}
+
+.btn-hanfu:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-medium);
+}
+
+/* Element Plus 覆盖样式 */
+.el-button--primary {
+  --el-button-bg-color: var(--hanfu-red) !important;
+  --el-button-border-color: var(--hanfu-red) !important;
+  --el-button-hover-bg-color: var(--hanfu-red-light) !important;
+  --el-button-hover-border-color: var(--hanfu-red-light) !important;
+}
+
+.el-input__wrapper {
+  border-radius: var(--radius-sm) !important;
+  background: var(--hanfu-paper) !important;
+}
+
+.el-card {
+  border-radius: var(--radius-md) !important;
+  border: 1px solid var(--border-color) !important;
+  background: var(--hanfu-paper) !important;
+}
+
+.el-tag--danger {
+  --el-tag-bg-color: rgba(178, 34, 34, 0.1) !important;
+  --el-tag-border-color: var(--hanfu-red) !important;
+  --el-tag-text-color: var(--hanfu-red) !important;
+}
+
+.el-tag--warning {
+  --el-tag-bg-color: rgba(201, 162, 39, 0.1) !important;
+  --el-tag-border-color: var(--hanfu-gold) !important;
+  --el-tag-text-color: var(--hanfu-gold) !important;
+}
+
+.el-tag--success {
+  --el-tag-bg-color: rgba(74, 124, 89, 0.1) !important;
+  --el-tag-border-color: var(--color-success) !important;
+  --el-tag-text-color: var(--color-success) !important;
+}
+
+.el-tag--info {
+  --el-tag-bg-color: rgba(92, 74, 50, 0.1) !important;
+  --el-tag-border-color: var(--hanfu-ink-light) !important;
+  --el-tag-text-color: var(--hanfu-ink-light) !important;
+}
+
+/* 分页样式 */
+.el-pagination {
+  --el-pagination-button-bg-color: var(--hanfu-paper) !important;
+  --el-pagination-hover-color: var(--hanfu-red) !important;
+}
+
+.el-pagination.is-background .el-pager li.is-active {
+  background-color: var(--hanfu-red) !important;
+}
+
+/* 表格样式 */
+.el-table {
+  --el-table-border-color: var(--border-color) !important;
+  --el-table-header-bg-color: var(--hanfu-paper-dark) !important;
+}
+
+/* 消息框样式 */
+.el-message-box {
+  border-radius: var(--radius-md) !important;
 }

@@ -15,7 +15,13 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: () => import('@/views/login/Login.vue'),
-    meta: { title: '登录' }
+    meta: { title: '用户登录' }
+  },
+  {
+    path: '/admin-login',
+    name: 'AdminLogin',
+    component: () => import('@/views/login/AdminLogin.vue'),
+    meta: { title: '管理员登录' }
   },
   {
     path: '/register',
@@ -50,6 +56,24 @@ const routes = [
         name: 'UserManage',
         component: () => import('@/views/admin/UserManage.vue'),
         meta: { title: '用户管理' }
+      },
+      {
+        path: 'notice',
+        name: 'NoticeManage',
+        component: () => import('@/views/admin/NoticeManage.vue'),
+        meta: { title: '公告管理' }
+      },
+      {
+        path: 'banner',
+        name: 'BannerManage',
+        component: () => import('@/views/admin/BannerManage.vue'),
+        meta: { title: '轮播图管理' }
+      },
+      {
+        path: 'config',
+        name: 'ConfigManage',
+        component: () => import('@/views/admin/ConfigManage.vue'),
+        meta: { title: '系统配置' }
       }
     ]
   }

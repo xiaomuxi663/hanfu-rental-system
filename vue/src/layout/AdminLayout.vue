@@ -11,6 +11,18 @@
           <el-icon><User /></el-icon>
           <span>用户管理</span>
         </el-menu-item>
+        <el-menu-item index="/admin/notice">
+          <el-icon><Bell /></el-icon>
+          <span>公告管理</span>
+        </el-menu-item>
+        <el-menu-item index="/admin/banner">
+          <el-icon><Picture /></el-icon>
+          <span>轮播图管理</span>
+        </el-menu-item>
+        <el-menu-item index="/admin/config">
+          <el-icon><Setting /></el-icon>
+          <span>系统配置</span>
+        </el-menu-item>
       </el-menu>
     </el-aside>
     <el-container>
@@ -39,6 +51,7 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/store/user'
+import { DataAnalysis, User, Bell, Picture, Setting } from '@element-plus/icons-vue'
 
 const router = useRouter()
 const userStore = useUserStore()
