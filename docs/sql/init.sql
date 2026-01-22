@@ -5,8 +5,8 @@
 */
 
 -- 1. 创建数据库 (强制指定 utf8mb4 避免中文乱码)
-CREATE DATABASE IF NOT EXISTS hanfu_pro_db DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE hanfu_pro_db;
+CREATE DATABASE IF NOT EXISTS hanfu_rental_db DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE hanfu_rental_db;
 
 -- ==========================================
 -- 第一部分：权限与用户模块 (RBAC)
