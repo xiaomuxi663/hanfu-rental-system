@@ -216,8 +216,8 @@ INSERT INTO `sys_config` (param_key, param_value, param_desc) VALUES
 -- 3. 初始化汉服分类
 INSERT INTO `hanfu_category` (category_name) VALUES ('明制'), ('唐制'), ('宋制'), ('晋制');
 
--- 4. 初始化管理员账号 (密码: admin123，使用BCrypt加密)
+-- 4. 初始化管理员账号 (密码: admin123)
 INSERT INTO `sys_user` (username, password, nickname, status) VALUES 
-('admin', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iAt6Z5E', '超级管理员', 1);
+('admin', '$2a$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36Ff53.5z8Q1vN7qM9qxKby', '超级管理员', 1);
 
 INSERT INTO `sys_user_role` (user_id, role_id) VALUES (1, 1);

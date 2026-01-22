@@ -24,6 +24,12 @@ const routes = [
     meta: { title: '注册' }
   },
   {
+    path: '/profile',
+    name: 'Profile',
+    component: () => import('@/views/user/Profile.vue'),
+    meta: { title: '个人中心', requireAuth: true }
+  },
+  {
     path: '/admin',
     name: 'Admin',
     component: () => import('@/layout/AdminLayout.vue'),
@@ -38,6 +44,12 @@ const routes = [
         name: 'Dashboard',
         component: () => import('@/views/admin/Dashboard.vue'),
         meta: { title: '工作台' }
+      },
+      {
+        path: 'user',
+        name: 'UserManage',
+        component: () => import('@/views/admin/UserManage.vue'),
+        meta: { title: '用户管理' }
       }
     ]
   }

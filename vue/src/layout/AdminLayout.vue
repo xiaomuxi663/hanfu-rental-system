@@ -7,6 +7,10 @@
           <el-icon><DataAnalysis /></el-icon>
           <span>工作台</span>
         </el-menu-item>
+        <el-menu-item index="/admin/user">
+          <el-icon><User /></el-icon>
+          <span>用户管理</span>
+        </el-menu-item>
       </el-menu>
     </el-aside>
     <el-container>

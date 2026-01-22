@@ -6,7 +6,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/hanfu_rental_db?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
     username: root
-    password: root
+    password: 94887149021q
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8

@@ -31,6 +31,7 @@
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
+import { register } from '@/api/auth'
 
 const router = useRouter()
 const formRef = ref(null)
@@ -70,12 +71,20 @@ const rules = {
 const handleRegister = async () => {
   await formRef.value.validate()
   loading.value = true
-  // TODO: 调用注册接口
-  setTimeout(() => {
+  try {
+    await register({
+      username: form.username,
+      password: form.password,
+      phone: form.phone,
+      nickname: form.username
+    })
     ElMessage.success('注册成功，请登录')
     router.push('/login')
+  } catch (error) {
+    console.error(error)
+  } finally {
     loading.value = false
-  }, 1000)
+  }
 }
 </script>
 
