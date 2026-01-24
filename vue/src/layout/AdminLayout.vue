@@ -23,6 +23,21 @@
           <el-icon><Setting /></el-icon>
           <span>系统配置</span>
         </el-menu-item>
+        <el-sub-menu index="hanfu-manage">
+          <template #title>
+            <el-icon><Goods /></el-icon>
+            <span>汉服管理</span>
+          </template>
+          <el-menu-item index="/admin/category">
+            <span>分类管理</span>
+          </el-menu-item>
+          <el-menu-item index="/admin/hanfu">
+            <span>款式管理</span>
+          </el-menu-item>
+          <el-menu-item index="/admin/sku">
+            <span>库存管理</span>
+          </el-menu-item>
+        </el-sub-menu>
       </el-menu>
     </el-aside>
     <el-container>
@@ -51,7 +66,7 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/store/user'
-import { DataAnalysis, User, Bell, Picture, Setting } from '@element-plus/icons-vue'
+import { DataAnalysis, User, Bell, Picture, Setting, Goods } from '@element-plus/icons-vue'
 
 const router = useRouter()
 const userStore = useUserStore()

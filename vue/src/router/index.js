@@ -36,6 +36,18 @@ const routes = [
     meta: { title: '个人中心', requireAuth: true }
   },
   {
+    path: '/hanfu',
+    name: 'HanfuList',
+    component: () => import('@/views/hanfu/HanfuList.vue'),
+    meta: { title: '汉服展示' }
+  },
+  {
+    path: '/hanfu/:id',
+    name: 'HanfuDetail',
+    component: () => import('@/views/hanfu/HanfuDetail.vue'),
+    meta: { title: '汉服详情' }
+  },
+  {
     path: '/admin',
     name: 'Admin',
     component: () => import('@/layout/AdminLayout.vue'),
@@ -74,6 +86,24 @@ const routes = [
         name: 'ConfigManage',
         component: () => import('@/views/admin/ConfigManage.vue'),
         meta: { title: '系统配置' }
+      },
+      {
+        path: 'category',
+        name: 'CategoryManage',
+        component: () => import('@/views/admin/CategoryManage.vue'),
+        meta: { title: '分类管理' }
+      },
+      {
+        path: 'hanfu',
+        name: 'HanfuManage',
+        component: () => import('@/views/admin/HanfuManage.vue'),
+        meta: { title: '汉服管理' }
+      },
+      {
+        path: 'sku',
+        name: 'SkuManage',
+        component: () => import('@/views/admin/SkuManage.vue'),
+        meta: { title: '库存管理' }
       }
     ]
   }

@@ -8,8 +8,8 @@
           <span class="logo-text">汉服租赁</span>
         </div>
         <nav class="nav-menu">
-          <a href="#" class="nav-item active">首页</a>
-          <a href="#" class="nav-item">汉服展示</a>
+          <router-link to="/home" class="nav-item" :class="{ active: $route.path === '/home' }">首页</router-link>
+          <router-link to="/hanfu" class="nav-item" :class="{ active: $route.path.startsWith('/hanfu') }">汉服展示</router-link>
           <a href="#" class="nav-item">租赁流程</a>
           <a href="#" class="nav-item">关于我们</a>
         </nav>

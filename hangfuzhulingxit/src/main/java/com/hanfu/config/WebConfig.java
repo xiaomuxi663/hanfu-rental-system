@@ -27,7 +27,10 @@ public class WebConfig implements WebMvcConfigurer {
                         "/api/notice/list",
                         "/api/notice/banners",
                         "/api/notice/*",
-                        "/api/file/upload"
+                        "/api/file/upload",
+                        "/api/hanfu/list",
+                        "/api/hanfu/*",
+                        "/api/category/list"
                 );
     }
 
