@@ -87,12 +87,12 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="createTime" label="注册时间" width="170">
+        <el-table-column prop="createTime" label="注册时间" min-width="170">
           <template #default="{ row }">
-            <span class="time-text">{{ row.createTime || '-' }}</span>
+            <span class="time-text">{{ formatTime(row.createTime) }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="120" fixed="right" align="center">
+        <el-table-column label="操作" width="100" align="center">
           <template #default="{ row }">
             <template v-if="row.roleKey !== 'admin'">
               <el-button 
@@ -199,6 +199,12 @@ const getCreditClass = (score) => {
   if (score >= 80) return 'credit-high'
   if (score >= 60) return 'credit-medium'
   return 'credit-low'
+}
+
+// 格式化时间
+const formatTime = (time) => {
+  if (!time) return '-'
+  return time.replace('T', ' ').substring(0, 16)
 }
 </script>
 

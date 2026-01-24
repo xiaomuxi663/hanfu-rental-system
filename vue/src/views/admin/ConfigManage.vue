@@ -12,57 +12,54 @@
       </el-button>
     </div>
 
-    <!-- 配置列表 -->
-    <div class="config-section" v-loading="loading">
-      <div class="config-card" v-for="item in configList" :key="item.id">
-        <div class="config-header">
-          <div class="config-icon">
-            <el-icon v-if="item.paramKey === 'warehouse_address'"><Location /></el-icon>
-            <el-icon v-else-if="item.paramKey === 'warehouse_contact'"><Phone /></el-icon>
-            <el-icon v-else><Setting /></el-icon>
-          </div>
-          <div class="config-info">
-            <h3>{{ item.paramDesc || item.paramKey }}</h3>
-            <code>{{ item.paramKey }}</code>
-          </div>
-          <el-button 
-            type="danger" 
-            size="small" 
-            circle 
-            class="delete-btn"
-            @click="handleDelete(item)"
-          >
-            <el-icon><Delete /></el-icon>
-          </el-button>
-        </div>
-        <div class="config-body">
-          <el-input 
-            v-if="editingId === item.id"
-            v-model="editValue"
-            :type="item.paramKey === 'warehouse_address' ? 'textarea' : 'text'"
-            :rows="2"
-            placeholder="请输入参数值"
-          />
-          <p v-else class="config-value">{{ item.paramValue || '未设置' }}</p>
-        </div>
-        <div class="config-footer">
-          <template v-if="editingId === item.id">
-            <el-button type="primary" size="small" @click="handleSave(item)" :loading="saveLoading">
-              保存
-            </el-button>
-            <el-button size="small" @click="handleCancel">取消</el-button>
+    <!-- 数据表格 -->
+    <div class="table-section">
+      <el-table :data="configList" v-loading="loading" stripe>
+        <el-table-column prop="id" label="ID" width="70" align="center" />
+        <el-table-column prop="paramKey" label="参数键" width="180">
+          <template #default="{ row }">
+            <code class="param-key">{{ row.paramKey }}</code>
           </template>
-          <el-button v-else type="primary" size="small" text @click="handleEdit(item)">
-            <el-icon><Edit /></el-icon>编辑
-          </el-button>
-        </div>
-      </div>
+        </el-table-column>
+        <el-table-column prop="paramDesc" label="参数描述" width="200" />
+        <el-table-column prop="paramValue" label="参数值" min-width="250">
+          <template #default="{ row }">
+            <template v-if="editingId === row.id">
+              <el-input 
+                v-model="editValue" 
+                size="small"
+                placeholder="请输入参数值"
+                @keyup.enter="handleSave(row)"
+              />
+            </template>
+            <span v-else class="param-value">{{ row.paramValue || '未设置' }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="180" align="center">
+          <template #default="{ row }">
+            <template v-if="editingId === row.id">
+              <el-button type="success" size="small" text @click="handleSave(row)" :loading="saveLoading">保存</el-button>
+              <el-button size="small" text @click="handleCancel">取消</el-button>
+            </template>
+            <template v-else>
+              <el-button type="primary" size="small" text @click="handleEdit(row)">编辑</el-button>
+              <el-button type="danger" size="small" text @click="handleDelete(row)">删除</el-button>
+            </template>
+          </template>
+        </el-table-column>
+      </el-table>
 
-      <!-- 空状态 -->
-      <div class="empty-state" v-if="!loading && configList.length === 0">
-        <el-icon><Setting /></el-icon>
-        <p>暂无配置项</p>
-        <el-button type="primary" @click="handleAdd">添加配置</el-button>
+      <div class="pagination-section">
+        <el-pagination
+          v-model:current-page="pagination.pageNum"
+          v-model:page-size="pagination.pageSize"
+          :total="pagination.total"
+          :page-sizes="[10, 20, 50]"
+          layout="total, sizes, prev, pager, next"
+          @size-change="updatePageData"
+          @current-change="updatePageData"
+          background
+        />
       </div>
     </div>
 
@@ -90,15 +87,17 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Location, Phone, Setting, Edit, Plus, Delete } from '@element-plus/icons-vue'
+import { Plus } from '@element-plus/icons-vue'
 import { getConfigList, addConfig, updateConfig, deleteConfig } from '@/api/config'
 
 const loading = ref(false)
 const saveLoading = ref(false)
 const submitLoading = ref(false)
-const configList = ref([])
+const allConfigList = ref([])  // 全部数据
+const configList = ref([])     // 当前页数据
+const pagination = reactive({ pageNum: 1, pageSize: 10, total: 0 })
 
 const editingId = ref(null)
 const editValue = ref('')
@@ -126,12 +125,21 @@ const loadData = async () => {
   loading.value = true
   try {
     const res = await getConfigList()
-    configList.value = res.data || []
+    allConfigList.value = res.data || []
+    pagination.total = allConfigList.value.length
+    updatePageData()
   } catch (error) {
     console.error(error)
   } finally {
     loading.value = false
   }
+}
+
+// 更新当前页数据
+const updatePageData = () => {
+  const start = (pagination.pageNum - 1) * pagination.pageSize
+  const end = start + pagination.pageSize
+  configList.value = allConfigList.value.slice(start, end)
 }
 
 const handleAdd = () => {
@@ -145,7 +153,7 @@ const handleSubmit = async () => {
   await formRef.value.validate()
   
   // 检查key是否已存在
-  const exists = configList.value.some(c => c.paramKey === form.paramKey)
+  const exists = allConfigList.value.some(c => c.paramKey === form.paramKey)
   if (exists) {
     ElMessage.warning('该参数键已存在')
     return
@@ -239,102 +247,31 @@ const handleDelete = async (item) => {
   margin-bottom: 20px;
 }
 
-.config-section {
-  display: grid;
-  gap: 20px;
-}
-
-.config-card {
+.table-section {
   background: var(--hanfu-paper);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
-  padding: 25px;
-  transition: all 0.3s ease;
-  
-  &:hover {
-    box-shadow: var(--shadow-light);
-    
-    .delete-btn {
-      opacity: 1;
-    }
-  }
+  overflow: hidden;
 }
 
-.config-header {
+.pagination-section {
+  padding: 20px;
   display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 20px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid var(--border-color);
-  
-  .delete-btn {
-    margin-left: auto;
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
+  justify-content: flex-end;
+  border-top: 1px solid var(--border-color);
 }
 
-.config-icon {
-  width: 45px;
-  height: 45px;
-  background: linear-gradient(135deg, var(--hanfu-gold) 0%, #8B7019 100%);
-  color: var(--hanfu-ink);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-}
-
-.config-info {
-  h3 {
-    font-size: 16px;
-    color: var(--text-primary);
-    margin-bottom: 5px;
-  }
-  
-  code {
-    font-size: 12px;
-    color: var(--text-placeholder);
-    background: var(--hanfu-paper-dark);
-    padding: 2px 8px;
-    border-radius: 4px;
-  }
-}
-
-.config-body {
-  margin-bottom: 15px;
-}
-
-.config-value {
-  font-size: 15px;
-  color: var(--text-primary);
-  line-height: 1.6;
-  padding: 12px 15px;
+.param-key {
+  font-size: 13px;
+  color: var(--hanfu-red);
   background: var(--hanfu-paper-dark);
-  border-radius: var(--radius-sm);
+  padding: 2px 8px;
+  border-radius: 4px;
 }
 
-.config-footer {
-  display: flex;
-  gap: 10px;
-}
-
-.empty-state {
-  padding: 80px;
-  text-align: center;
-  color: var(--text-placeholder);
-  
-  .el-icon {
-    font-size: 60px;
-    margin-bottom: 15px;
-  }
-  
-  p {
-    font-size: 16px;
-    margin-bottom: 20px;
-  }
+.param-value {
+  color: var(--text-primary);
+  word-break: break-all;
 }
 
 .form-tip {

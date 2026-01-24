@@ -27,8 +27,6 @@
                 v-model="form.username" 
                 placeholder="请输入管理员账号"
                 size="large"
-                clearable
-                :maxlength="50"
               />
             </div>
           </el-form-item>
@@ -41,7 +39,6 @@
                 type="password" 
                 placeholder="请输入密码"
                 size="large"
-                :maxlength="50"
                 show-password
                 @keyup.enter="handleLogin"
               />
@@ -148,7 +145,7 @@ const handleLogin = async () => {
 
 /* 登录卡片 */
 .admin-login-card {
-  width: 440px;
+  width: 420px;
   background: linear-gradient(180deg, #3a3228 0%, #2C2416 100%);
   border: 1px solid rgba(201, 162, 39, 0.3);
   position: relative;
@@ -201,10 +198,12 @@ const handleLogin = async () => {
 
 /* 表单区域 */
 .card-body {
-  padding: 35px 40px 30px;
+  padding: 30px 40px;
 }
 
 .input-group {
+  width: 100%;
+  
   label {
     display: block;
     font-size: 12px;
@@ -214,8 +213,16 @@ const handleLogin = async () => {
   }
 }
 
+:deep(.el-form-item) {
+  margin-bottom: 24px;
+  
+  .el-form-item__content {
+    width: 100%;
+  }
+}
+
 :deep(.el-input) {
-  width: 100%;
+  width: 100% !important;
 }
 
 :deep(.el-input__wrapper) {
@@ -242,10 +249,6 @@ const handleLogin = async () => {
 
 :deep(.el-input__suffix) {
   color: #9E8E73;
-}
-
-:deep(.el-form-item) {
-  margin-bottom: 24px;
 }
 
 .login-btn {

@@ -150,6 +150,7 @@ import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { Bell, Document, ArrowRight } from '@element-plus/icons-vue'
 import { getBanners, getNoticeList } from '@/api/notice'
+import { getUserInfo } from '@/api/auth'
 import { useUserStore } from '@/store/user'
 
 const router = useRouter()
@@ -171,6 +172,15 @@ const features = [
 ]
 
 onMounted(async () => {
+  // 如果已登录但没有用户信息，重新获取
+  if (userStore.token && !userStore.userInfo) {
+    try {
+      const res = await getUserInfo()
+      userStore.setUserInfo(res.data)
+    } catch (error) {
+      console.error('获取用户信息失败', error)
+    }
+  }
   await loadBanners()
   await loadNotices()
 })
@@ -213,7 +223,7 @@ const goToProfile = () => {
 }
 
 const handleLogout = () => {
-  userStore.clearUserInfo()
+  userStore.logout()
   ElMessage.success('已退出登录')
   router.push('/login')
 }

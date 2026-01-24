@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 /**
  * 数据初始化器 - 确保管理员账号存在且密码正确
  */
@@ -25,6 +27,7 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) {
         initAdminUser();
+        fixMissingCreateTime();
     }
 
     private void initAdminUser() {
@@ -40,6 +43,7 @@ public class DataInitializer implements CommandLineRunner {
             admin.setNickname("超级管理员");
             admin.setCreditScore(100);
             admin.setStatus(1);
+            admin.setCreateTime(LocalDateTime.now());
             userMapper.insert(admin);
 
             // 分配管理员角色
@@ -55,5 +59,19 @@ public class DataInitializer implements CommandLineRunner {
             userMapper.updateById(admin);
             log.info("已更新管理员密码");
         }
+    }
+
+    /**
+     * 修复缺失的createTime字段
+     */
+    private void fixMissingCreateTime() {
+        LambdaQueryWrapper<SysUser> wrapper = new LambdaQueryWrapper<>();
+        wrapper.isNull(SysUser::getCreateTime);
+        
+        userMapper.selectList(wrapper).forEach(user -> {
+            user.setCreateTime(LocalDateTime.now());
+            userMapper.updateById(user);
+            log.info("已修复用户 {} 的注册时间", user.getUsername());
+        });
     }
 }

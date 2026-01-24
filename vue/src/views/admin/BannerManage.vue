@@ -12,30 +12,45 @@
       </el-button>
     </div>
 
-    <!-- 轮播图列表 -->
-    <div class="banner-grid" v-loading="loading">
-      <div class="banner-card" v-for="item in tableData" :key="item.id">
-        <div class="banner-image">
-          <img :src="item.imgUrl" :alt="item.title" />
-          <div class="banner-actions">
-            <el-button type="primary" size="small" circle @click="handleEdit(item)">
-              <el-icon><Edit /></el-icon>
-            </el-button>
-            <el-button type="danger" size="small" circle @click="handleDelete(item)">
-              <el-icon><Delete /></el-icon>
-            </el-button>
-          </div>
-        </div>
-        <div class="banner-info">
-          <h3>{{ item.title }}</h3>
-          <p>{{ formatTime(item.createTime) }}</p>
-        </div>
-      </div>
+    <!-- 数据表格 -->
+    <div class="table-section">
+      <el-table :data="tableData" v-loading="loading" stripe>
+        <el-table-column prop="id" label="ID" width="70" align="center" />
+        <el-table-column label="图片预览" width="120" align="center">
+          <template #default="{ row }">
+            <el-image 
+              :src="row.imgUrl" 
+              :preview-src-list="[row.imgUrl]"
+              fit="cover"
+              class="table-image"
+            />
+          </template>
+        </el-table-column>
+        <el-table-column prop="title" label="标题" min-width="200" />
+        <el-table-column prop="createTime" label="发布时间" width="170">
+          <template #default="{ row }">
+            {{ formatTime(row.createTime) }}
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="150" align="center">
+          <template #default="{ row }">
+            <el-button type="primary" size="small" text @click="handleEdit(row)">编辑</el-button>
+            <el-button type="danger" size="small" text @click="handleDelete(row)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
 
-      <!-- 空状态 -->
-      <div class="empty-state" v-if="!loading && tableData.length === 0">
-        <el-icon><Picture /></el-icon>
-        <p>暂无轮播图</p>
+      <div class="pagination-section">
+        <el-pagination
+          v-model:current-page="pagination.pageNum"
+          v-model:page-size="pagination.pageSize"
+          :total="pagination.total"
+          :page-sizes="[10, 20, 50]"
+          layout="total, sizes, prev, pager, next"
+          @size-change="loadData"
+          @current-change="loadData"
+          background
+        />
       </div>
     </div>
 
@@ -79,13 +94,14 @@
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Plus, Edit, Delete, Picture } from '@element-plus/icons-vue'
+import { Plus } from '@element-plus/icons-vue'
 import { getNoticePage, addNotice, updateNotice, deleteNotice } from '@/api/notice'
 import { uploadUrl } from '@/api/file'
 
 const loading = ref(false)
 const submitLoading = ref(false)
 const tableData = ref([])
+const pagination = reactive({ pageNum: 1, pageSize: 10, total: 0 })
 
 const dialogVisible = ref(false)
 const isEdit = ref(false)
@@ -113,11 +129,12 @@ const loadData = async () => {
   loading.value = true
   try {
     const res = await getNoticePage({
-      pageNum: 1,
-      pageSize: 100,
+      pageNum: pagination.pageNum,
+      pageSize: pagination.pageSize,
       type: 2  // 只查询轮播图
     })
     tableData.value = res.data.records
+    pagination.total = res.data.total
   } catch (error) {
     console.error(error)
   } finally {
@@ -231,84 +248,25 @@ const formatTime = (time) => {
   margin-bottom: 20px;
 }
 
-.banner-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 25px;
-}
-
-.banner-card {
+.table-section {
   background: var(--hanfu-paper);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   overflow: hidden;
-  transition: all 0.3s ease;
-  
-  &:hover {
-    box-shadow: var(--shadow-medium);
-    
-    .banner-actions {
-      opacity: 1;
-    }
-  }
 }
 
-.banner-image {
-  position: relative;
-  height: 180px;
-  background: var(--hanfu-cloud);
-  
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  .banner-actions {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(44, 36, 22, 0.6);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
+.pagination-section {
+  padding: 20px;
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid var(--border-color);
 }
 
-.banner-info {
-  padding: 15px 20px;
-  
-  h3 {
-    font-size: 16px;
-    color: var(--text-primary);
-    margin-bottom: 5px;
-  }
-  
-  p {
-    font-size: 13px;
-    color: var(--text-secondary);
-  }
-}
-
-.empty-state {
-  grid-column: 1 / -1;
-  padding: 80px;
-  text-align: center;
-  color: var(--text-placeholder);
-  
-  .el-icon {
-    font-size: 60px;
-    margin-bottom: 15px;
-  }
-  
-  p {
-    font-size: 16px;
-  }
+.table-image {
+  width: 80px;
+  height: 45px;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 /* 上传组件样式 */

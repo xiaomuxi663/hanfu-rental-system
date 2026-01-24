@@ -3,6 +3,7 @@ package com.hanfu.vo;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 /**
  * 用户信息VO
@@ -37,4 +38,6 @@ public class UserVo {
     private String defaultReceiverPhone;
 
     private String defaultAddress;
+
+    private LocalDateTime createTime;
 }
